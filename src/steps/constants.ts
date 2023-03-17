@@ -7,14 +7,15 @@ export const Steps = {
 export const Entities: Record<'ACCOUNT', StepEntityMetadata> = {
   ACCOUNT: {
     resourceName: 'Account',
-    _type: 'acme_account',
+    _type: 'cisco_umbrella_account',
     _class: ['Account'],
     schema: {
       properties: {
         mfaEnabled: { type: 'boolean' },
         manager: { type: 'string' },
       },
-      required: ['mfaEnabled', 'manager'],
+      // Commenting out until we know if these values are available.
+      // required: ['mfaEnabled', 'manager'],
     },
   },
 };

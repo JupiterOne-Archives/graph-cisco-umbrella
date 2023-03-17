@@ -10,10 +10,10 @@ export function createAccountEntity(): Entity {
     entityData: {
       source: {},
       assign: {
-        _key: 'acme-unique-account-id',
+        _key: 'cisco-umbrella-unique-account-id',
         _type: Entities.ACCOUNT._type,
         _class: Entities.ACCOUNT._class,
-        name: 'acme-name',
+        name: 'cisco-umbrella-account',
       },
     },
   });
