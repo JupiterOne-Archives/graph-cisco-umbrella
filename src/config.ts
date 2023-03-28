@@ -4,7 +4,7 @@ import {
   IntegrationInstanceConfigFieldMap,
   IntegrationInstanceConfig,
 } from '@jupiterone/integration-sdk-core';
-import { createAPIClient } from './client';
+import { getOrCreateAPIClient } from './client';
 
 /**
  * A type describing the configuration fields required to execute the
@@ -57,6 +57,6 @@ export async function validateInvocation(
     );
   }
 
-  const apiClient = createAPIClient(config);
+  const apiClient = getOrCreateAPIClient(config, context.logger);
   await apiClient.verifyAuthentication();
 }

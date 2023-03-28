@@ -1,4 +1,13 @@
 import { IntegrationConfig } from './config';
+import {
+  IntegrationProviderAuthenticationError,
+  IntegrationLogger,
+  IntegrationProviderAuthorizationError,
+  IntegrationProviderAPIError,
+  IntegrationError,
+} from '@jupiterone/integration-sdk-core';
+import { GaxiosError, GaxiosOptions, GaxiosResponse, request } from 'gaxios';
+import { SessionTokenResponse } from './types';
 
 export type ResourceIteratee<T> = (each: T) => Promise<void> | void;
 
@@ -11,16 +20,148 @@ export type ResourceIteratee<T> = (each: T) => Promise<void> | void;
  * resources.
  */
 export class APIClient {
-  constructor(readonly config: IntegrationConfig) {}
+  constructor(
+    readonly config: IntegrationConfig,
+    readonly logger: IntegrationLogger,
+  ) {}
+
+  private RATE_LIMIT_SLEEP_TIME = 5000;
+  private MAX_RETRIES = 3;
+
+  private BASE_URL = 'https://api.umbrella.com/';
+  private headers = {
+    'Content-Type': 'application/json',
+    Authorization: '',
+  };
+
+  // We request a token with an hour long expiration based on documentation, but
+  // testing via Insomnia prior to writing this showed that the endpoint may not
+  // actually be using the expires_in field and may just be defaulting to 3600.
+  private async getToken(): Promise<string> {
+    if (!this.headers.Authorization) {
+      const encodedCredentials = Buffer.from(
+        `${this.config.clientId}:${this.config.clientSecret}`,
+      ).toString('base64');
+      const requestOpts: GaxiosOptions = {
+        url: this.BASE_URL + '/auth/v2/token',
+        method: 'POST',
+        headers: {
+          Authorization: `Basic ${encodedCredentials}`,
+        },
+        data: {
+          token_type: 'bearer',
+          expires_in: 3600,
+        },
+      };
+      const response = await request<SessionTokenResponse>(requestOpts);
+      this.headers.Authorization = `Bearer ${response.data.access_token}`;
+    }
+    return this.headers.Authorization;
+  }
 
   public async verifyAuthentication(): Promise<void> {
-    // TODO make the most light-weight request possible to validate
-    // authentication works with the provided credentials, throw an err if
-    // authentication fails
-    return Promise.resolve();
+    const requestOpts: GaxiosOptions = {
+      url: this.BASE_URL + '/deployments/v2/sites?limit=1',
+      method: 'GET',
+      headers: this.headers,
+    };
+
+    const response = await this.requestWithRetry(requestOpts);
+
+    if (response) return;
+  }
+
+  /**
+   * Performs generic request and retries in the event of a 429 or authentication error (token refresh).
+   *
+   * @param requestOptions GaxiosOptions outlining the particulars of the request
+   */
+  public async requestWithRetry<T>(
+    requestOptions: GaxiosOptions,
+  ): Promise<GaxiosResponse<T> | undefined> {
+    let retryCounter = 0;
+
+    do {
+      try {
+        await this.getToken();
+        const response = await request<T>(requestOptions);
+        return response;
+      } catch (err) {
+        if (err.response?.status == 429) {
+          // Documentation doesn't mention a retry-after header, but it
+          // does note that all rate limits are on a per second basis.  Setting
+          // the sleep to be fairly short as a result.
+          this.logger.info(`Encountered a rate limit.  Retrying in 5 seconds.`);
+          retryCounter++;
+          await new Promise((resolve) =>
+            setTimeout(resolve, this.RATE_LIMIT_SLEEP_TIME),
+          );
+        } else if (
+          (err.response?.status == 401 || err.response?.status == 403) &&
+          retryCounter == 0
+        ) {
+          this.logger.info(
+            `Encountered an authentication error.  Refreshing token and retrying.`,
+          );
+          this.headers.Authorization = '';
+          retryCounter++;
+        } else if (err instanceof GaxiosError) {
+          throw this.createIntegrationError(
+            err.response?.status as number,
+            err.response?.statusText as string,
+            err.response?.config?.url as string,
+          );
+        } else {
+          throw new IntegrationError({
+            message: err.message,
+            code: err.name,
+          });
+        }
+      }
+    } while (retryCounter < this.MAX_RETRIES);
+  }
+
+  private createIntegrationError(
+    status: number,
+    statusText: string,
+    endpoint: string,
+  ) {
+    this.logger.info(
+      { status, statusText, endpoint },
+      'Error when fetching data.',
+    );
+    switch (status) {
+      case 401: {
+        return new IntegrationProviderAuthenticationError({
+          status,
+          statusText,
+          endpoint,
+        });
+      }
+      case 403:
+        return new IntegrationProviderAuthorizationError({
+          status,
+          statusText,
+          endpoint,
+        });
+      default:
+        return new IntegrationProviderAPIError({
+          status,
+          statusText,
+          endpoint,
+        });
+    }
   }
 }
 
-export function createAPIClient(config: IntegrationConfig): APIClient {
-  return new APIClient(config);
+let client: APIClient;
+
+export function getOrCreateAPIClient(
+  config: IntegrationConfig,
+  logger: IntegrationLogger,
+): APIClient {
+  if (!client) {
+    client = new APIClient(config, logger);
+  }
+  return client;
 }
