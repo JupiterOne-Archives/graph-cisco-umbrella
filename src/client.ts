@@ -38,22 +38,21 @@ export class APIClient {
   // testing via Insomnia prior to writing this showed that the endpoint may not
   // actually be using the expires_in field and may just be defaulting to 3600.
   private async getToken(): Promise<string> {
-    const encodedCredentials = Buffer.from(
-      `${this.config.clientId}:${this.config.clientSecret}`,
-    ).toString('base64');
-    const requestOpts: GaxiosOptions = {
-      url: this.BASE_URL + '/auth/v2/token',
-      method: 'POST',
-      headers: {
-        Authorization: `Basic ${encodedCredentials}`,
-      },
-      data: {
-        token_type: 'bearer',
-        expires_in: 3600,
-      },
-    };
-
     if (!this.headers.Authorization) {
+      const encodedCredentials = Buffer.from(
+        `${this.config.clientId}:${this.config.clientSecret}`,
+      ).toString('base64');
+      const requestOpts: GaxiosOptions = {
+        url: this.BASE_URL + '/auth/v2/token',
+        method: 'POST',
+        headers: {
+          Authorization: `Basic ${encodedCredentials}`,
+        },
+        data: {
+          token_type: 'bearer',
+          expires_in: 3600,
+        },
+      };
       const response = await request<SessionTokenResponse>(requestOpts);
       this.headers.Authorization = `Bearer ${response.data.access_token}`;
     }
