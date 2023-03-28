@@ -7,3 +7,10 @@ and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [0.1.0] - 2023-03-28
+
+### Added
+
+- Initial implementation of API client with working authentication and token
+  refresh.
