@@ -7,7 +7,18 @@ import {
   IntegrationError,
 } from '@jupiterone/integration-sdk-core';
 import { GaxiosError, GaxiosOptions, GaxiosResponse, request } from 'gaxios';
-import { SessionTokenResponse } from './types';
+import {
+  Destination,
+  DestinationList,
+  Domain,
+  Network,
+  NetworkTunnel,
+  Policy,
+  SessionTokenResponse,
+  Site,
+  UmbrellaMetaResponse,
+  VirtualAppliance,
+} from './types';
 
 export type ResourceIteratee<T> = (each: T) => Promise<void> | void;
 
@@ -27,6 +38,7 @@ export class APIClient {
 
   private RATE_LIMIT_SLEEP_TIME = 5000;
   private MAX_RETRIES = 3;
+  private PAGE_SIZE = 100;
 
   private BASE_URL = 'https://api.umbrella.com/';
   private headers = {
@@ -88,14 +100,17 @@ export class APIClient {
         return response;
       } catch (err) {
         if (err.response?.status == 429) {
-          // Documentation doesn't mention a retry-after header, but it
-          // does note that all rate limits are on a per second basis.  Setting
-          // the sleep to be fairly short as a result.
-          this.logger.info(`Encountered a rate limit.  Retrying in 5 seconds.`);
-          retryCounter++;
-          await new Promise((resolve) =>
-            setTimeout(resolve, this.RATE_LIMIT_SLEEP_TIME),
+          const sleepTime = err.response?.headers['retry-after']
+            ? err.response?.headers['retry-after'] * 1000
+            : this.RATE_LIMIT_SLEEP_TIME;
+          this.logger.info(
+            `Encountered a rate limit.  Retrying in ${
+              sleepTime / 1000
+            } seconds.`,
           );
+
+          retryCounter++;
+          await new Promise((resolve) => setTimeout(resolve, sleepTime));
         } else if (
           (err.response?.status == 401 || err.response?.status == 403) &&
           retryCounter == 0
@@ -119,6 +134,180 @@ export class APIClient {
         }
       }
     } while (retryCounter < this.MAX_RETRIES);
+  }
+
+  /**
+   * Performs generic request with iterator.
+   *
+   * @param requestUrl string to append to base URL for the particular request
+   * @param iteratee receives each source to produce entities/relationships
+   */
+  public async requestIterator<T>(
+    requestUrl: string,
+    iteratee: ResourceIteratee<T>,
+  ): Promise<void> {
+    let page = 1;
+    let done = false;
+    let receivedCount = 0;
+
+    do {
+      const requestOpts: GaxiosOptions = {
+        url:
+          this.BASE_URL + requestUrl + `?page=${page}&limit=${this.PAGE_SIZE}`,
+        method: 'GET',
+        headers: this.headers,
+      };
+      const response = await this.requestWithRetry<[T]>(requestOpts);
+      if (response?.data) {
+        receivedCount = response.data.length;
+        for (const item of response.data) {
+          await iteratee(item);
+        }
+        page++;
+      } else {
+        done = true;
+      }
+    } while (!done && receivedCount == this.PAGE_SIZE);
+  }
+
+  /**
+   * Performs generic request with iterator.
+   *
+   * @param requestUrl string to append to base URL for the particular request
+   * @param iteratee receives each source to produce entities/relationships
+   */
+  public async requestIteratorWithNestedData<T>(
+    requestUrl: string,
+    iteratee: ResourceIteratee<T>,
+  ): Promise<void> {
+    let page = 1;
+    let done = false;
+    let receivedCount = 0;
+
+    do {
+      const requestOpts: GaxiosOptions = {
+        url:
+          this.BASE_URL + requestUrl + `?page=${page}&limit=${this.PAGE_SIZE}`,
+        method: 'GET',
+        headers: this.headers,
+      };
+      const response = await this.requestWithRetry<UmbrellaMetaResponse<T>>(
+        requestOpts,
+      );
+      if (response?.data?.data) {
+        receivedCount = response.data.data.length;
+        for (const item of response.data.data) {
+          await iteratee(item);
+        }
+        page++;
+      } else {
+        done = true;
+      }
+    } while (!done && receivedCount == this.PAGE_SIZE);
+  }
+
+  /**
+   * Iterates each destination for a given destination list.
+   *
+   * @param destinationLIstId ID of particular destination list we are querying
+   * @param iteratee receives each source to produce entities/relationships
+   */
+  public async iterateDestinations(
+    destinationListId: number,
+    iteratee: ResourceIteratee<Destination>,
+  ): Promise<void> {
+    await this.requestIteratorWithNestedData<Destination>(
+      `/policies/v2/destinationlists/${destinationListId}/destinations`,
+      iteratee,
+    );
+  }
+
+  /**
+   * Iterates each destination list in the provider.
+   *
+   * @param iteratee receives each source to produce entities/relationships
+   */
+  public async iterateDestinationLists(
+    iteratee: ResourceIteratee<DestinationList>,
+  ): Promise<void> {
+    // We can't use the typical requestIterator
+    await this.requestIteratorWithNestedData<DestinationList>(
+      `/policies/v2/destinationlists`,
+      iteratee,
+    );
+  }
+
+  /**
+   * Iterates each domain in the provider.
+   *
+   * @param iteratee receives each source to produce entities/relationships
+   */
+  public async iterateDomains(
+    iteratee: ResourceIteratee<Domain>,
+  ): Promise<void> {
+    await this.requestIteratorWithNestedData<Domain>(
+      `/deployments/v2/internaldomains`,
+      iteratee,
+    );
+  }
+
+  /**
+   * Iterates each network in the provider.
+   *
+   * @param iteratee receives each source to produce entities/relationships
+   */
+  public async iterateNetworks(
+    iteratee: ResourceIteratee<Network>,
+  ): Promise<void> {
+    await this.requestIterator<Network>(`/deployments/v2/networks`, iteratee);
+  }
+
+  /**
+   * Iterates each network tunnel in the provider.
+   *
+   * @param iteratee receives each source to produce entities/relationships
+   */
+  public async iterateNetworkTunnels(
+    iteratee: ResourceIteratee<NetworkTunnel>,
+  ): Promise<void> {
+    await this.requestIterator<NetworkTunnel>(
+      `/deployments/v2/tunnels`,
+      iteratee,
+    );
+  }
+
+  /**
+   * Iterates each policy in the provider.
+   *
+   * @param iteratee receives each source to produce entities/relationships
+   */
+  public async iteratePolicies(
+    iteratee: ResourceIteratee<Policy>,
+  ): Promise<void> {
+    await this.requestIterator<Policy>(`/deployments/v2/policies`, iteratee);
+  }
+
+  /**
+   * Iterates each site in the provider.
+   *
+   * @param iteratee receives each source to produce entities/relationships
+   */
+  public async iterateSites(iteratee: ResourceIteratee<Site>): Promise<void> {
+    await this.requestIterator<Site>(`/deployments/v2/sites`, iteratee);
+  }
+
+  /**
+   * Iterates each virtual appliance in the provider.
+   *
+   * @param iteratee receives each source to produce entities/relationships
+   */
+  public async iterateVirtualAppliances(
+    iteratee: ResourceIteratee<VirtualAppliance>,
+  ): Promise<void> {
+    await this.requestIterator<VirtualAppliance>(
+      `/deployments/v2/virtualappliances`,
+      iteratee,
+    );
   }
 
   private createIntegrationError(
