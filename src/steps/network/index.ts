@@ -8,13 +8,9 @@ import { getOrCreateAPIClient } from '../../client';
 import { IntegrationConfig } from '../../config';
 import { ACCOUNT_ENTITY_KEY } from '../account';
 import { Entities, Relationships, Steps } from '../constants';
-import { createNetworkTunnelKey } from '../networkTunnel/converter';
-import { createSiteKey } from '../site/converter';
 import {
   createNetworkEntity,
   createAccountNetworkRelationship,
-  createSiteTunnelRelationship,
-  createTunnelNetworkRelationship,
 } from './converter';
 
 export async function fetchNetworks({
