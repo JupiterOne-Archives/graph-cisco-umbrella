@@ -10,6 +10,7 @@ import { createDomainKey } from '../domain/converter';
 import { createSiteKey } from '../site/converter';
 import {
   createSiteVirtualApplianceRelationship,
+  createVirtualApplianceDomainRelationship,
   createVirtualApplianceEntity,
 } from './converter';
 
@@ -41,7 +42,7 @@ export async function fetchVirtualAppliances({
       const domainEntity = await jobState.findEntity(createDomainKey(domain));
       if (domainEntity) {
         await jobState.addRelationship(
-          createSiteVirtualApplianceRelationship(
+          createVirtualApplianceDomainRelationship(
             virtualApplianceEntity,
             domainEntity,
           ),
@@ -60,7 +61,7 @@ export const virtualApplianceSteps: IntegrationStep<IntegrationConfig>[] = [
       Relationships.SITE_HAS_VIRTUAL_APPLIANCE,
       Relationships.VIRTUAL_APPLIANCE_USES_DOMAIN,
     ],
-    dependsOn: [Steps.SITE],
+    dependsOn: [Steps.SITE, Steps.DOMAIN],
     executionHandler: fetchVirtualAppliances,
   },
 ];

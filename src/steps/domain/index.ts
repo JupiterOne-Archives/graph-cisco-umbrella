@@ -1,12 +1,17 @@
 import {
+  Entity,
   IntegrationStep,
   IntegrationStepExecutionContext,
 } from '@jupiterone/integration-sdk-core';
 
 import { getOrCreateAPIClient } from '../../client';
 import { IntegrationConfig } from '../../config';
-import { Entities, Steps } from '../constants';
-import { createDomainEntity } from './converter';
+import { Entities, Relationships, Steps } from '../constants';
+import {
+  createAccountDomainRelationship,
+  createDomainEntity,
+} from './converter';
+import { ACCOUNT_ENTITY_KEY } from '../account';
 
 export async function fetchDomains({
   instance,
@@ -15,8 +20,14 @@ export async function fetchDomains({
 }: IntegrationStepExecutionContext<IntegrationConfig>) {
   const apiClient = getOrCreateAPIClient(instance.config, logger);
 
+  const accountEntity = (await jobState.getData(ACCOUNT_ENTITY_KEY)) as Entity;
+
   await apiClient.iterateDomains(async (domain) => {
-    await jobState.addEntity(createDomainEntity(domain));
+    const domainEntity = await jobState.addEntity(createDomainEntity(domain));
+
+    await jobState.addRelationship(
+      createAccountDomainRelationship(accountEntity, domainEntity),
+    );
   });
 }
 
@@ -25,8 +36,8 @@ export const domainSteps: IntegrationStep<IntegrationConfig>[] = [
     id: Steps.DOMAIN,
     name: 'Fetch Domains',
     entities: [Entities.DOMAIN],
-    relationships: [],
-    dependsOn: [],
+    relationships: [Relationships.ACCOUNT_HAS_DOMAIN],
+    dependsOn: [Steps.ACCOUNT],
     executionHandler: fetchDomains,
   },
 ];

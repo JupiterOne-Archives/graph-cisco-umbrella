@@ -55,7 +55,7 @@ export async function fetchDestinations({
 
 export const destinationSteps: IntegrationStep<IntegrationConfig>[] = [
   {
-    id: Steps.DESTINATION_LIST,
+    id: Steps.DESTINATION,
     name: 'Fetch Destinations',
     entities: [Entities.DESTINATION_LIST, Entities.DESTINATION],
     relationships: [

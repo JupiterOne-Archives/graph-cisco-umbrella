@@ -17,7 +17,7 @@ export const siteSpec: StepSpec<IntegrationConfig>[] = [
       },
     ],
     relationships: [],
-    dependsOn: [],
+    dependsOn: ['fetch-account'],
     implemented: true,
   },
 ];

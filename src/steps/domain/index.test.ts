@@ -9,7 +9,7 @@ afterEach(async () => {
   await recording.stop();
 });
 
-test.skip('fetch-domains', async () => {
+test('fetch-domains', async () => {
   recording = setupProjectRecording({
     directory: __dirname,
     name: 'fetch-domains',

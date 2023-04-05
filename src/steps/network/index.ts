@@ -34,21 +34,6 @@ export async function fetchNetworks({
     await jobState.addRelationship(
       createAccountNetworkRelationship(accountEntity, networkEntity),
     );
-
-    const siteEntity = await jobState.findEntity(createSiteKey(network.siteId));
-    const tunnelEntity = await jobState.findEntity(
-      createNetworkTunnelKey(network.tunnelId),
-    );
-    if (siteEntity && tunnelEntity) {
-      await jobState.addRelationship(
-        createSiteTunnelRelationship(siteEntity, tunnelEntity),
-      );
-    }
-    if (tunnelEntity) {
-      await jobState.addRelationship(
-        createTunnelNetworkRelationship(tunnelEntity, networkEntity),
-      );
-    }
   });
 }
 
@@ -57,12 +42,8 @@ export const networkSteps: IntegrationStep<IntegrationConfig>[] = [
     id: Steps.NETWORK,
     name: 'Fetch Networks',
     entities: [Entities.NETWORK],
-    relationships: [
-      Relationships.ACCOUNT_HAS_NETWORK,
-      Relationships.NETWORK_TUNNEL_CONNECTS_NETWORK,
-      Relationships.SITE_HAS_NETWORK_TUNNEL,
-    ],
-    dependsOn: [Steps.ACCOUNT, Steps.NETWORK_TUNNEL, Steps.SITE],
+    relationships: [Relationships.ACCOUNT_HAS_NETWORK],
+    dependsOn: [Steps.ACCOUNT],
     executionHandler: fetchNetworks,
   },
 ];

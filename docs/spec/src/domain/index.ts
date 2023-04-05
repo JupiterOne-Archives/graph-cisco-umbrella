@@ -1,4 +1,4 @@
-import { StepSpec } from '@jupiterone/integration-sdk-core';
+import { RelationshipClass, StepSpec } from '@jupiterone/integration-sdk-core';
 import { IntegrationConfig } from '../../../../src/config';
 
 export const domainSpec: StepSpec<IntegrationConfig>[] = [
@@ -16,8 +16,15 @@ export const domainSpec: StepSpec<IntegrationConfig>[] = [
         _class: ['Domain'],
       },
     ],
-    relationships: [],
-    dependsOn: [],
+    relationships: [
+      {
+        _class: RelationshipClass.HAS,
+        _type: 'cisco_umbrella_account_has_domain',
+        sourceType: 'cisco_umbrella_account',
+        targetType: 'cisco_umbrella_domain',
+      },
+    ],
+    dependsOn: ['fetch-account'],
     implemented: true,
   },
 ];

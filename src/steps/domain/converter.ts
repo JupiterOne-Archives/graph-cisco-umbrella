@@ -1,7 +1,10 @@
 import {
+  createDirectRelationship,
   createIntegrationEntity,
   Entity,
   parseTimePropertyValue,
+  Relationship,
+  RelationshipClass,
 } from '@jupiterone/integration-sdk-core';
 import { Domain } from '../../types';
 
@@ -30,5 +33,16 @@ export function createDomainEntity(domain: Domain): Entity {
         modifiedOn: parseTimePropertyValue(domain.modifiedAt),
       },
     },
+  });
+}
+
+export function createAccountDomainRelationship(
+  account: Entity,
+  domain: Entity,
+): Relationship {
+  return createDirectRelationship({
+    _class: RelationshipClass.HAS,
+    from: account,
+    to: domain,
   });
 }

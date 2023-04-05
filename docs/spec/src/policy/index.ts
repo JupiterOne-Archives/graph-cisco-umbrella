@@ -1,4 +1,4 @@
-import { StepSpec } from '@jupiterone/integration-sdk-core';
+import { RelationshipClass, StepSpec } from '@jupiterone/integration-sdk-core';
 import { IntegrationConfig } from '../../../../src/config';
 
 export const policySpec: StepSpec<IntegrationConfig>[] = [
@@ -16,8 +16,15 @@ export const policySpec: StepSpec<IntegrationConfig>[] = [
         _class: ['Policy'],
       },
     ],
-    relationships: [],
-    dependsOn: [],
+    relationships: [
+      {
+        _class: RelationshipClass.HAS,
+        _type: 'cisco_umbrella_account_has_policy',
+        sourceType: 'cisco_umbrella_account',
+        targetType: 'cisco_umbrella_policy',
+      },
+    ],
+    dependsOn: ['fetch-account'],
     implemented: true,
   },
 ];

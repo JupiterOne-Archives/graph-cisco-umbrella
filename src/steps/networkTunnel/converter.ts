@@ -27,7 +27,7 @@ export function createNetworkTunnelEntity(tunnel: NetworkTunnel): Entity {
         id: tunnel.id.toString(),
         createdOn: parseTimePropertyValue(tunnel.createdAt),
         lastModifiedOn: parseTimePropertyValue(tunnel.modifiedAt),
-        CIDR: tunnel.networkCIDRs || null,
+        networkCIDRs: tunnel.networkCIDRs,
         serviceType: tunnel.serviceType,
         deviceType: tunnel.client.deviceType,
         authenticationType: tunnel.client.authentication.type,

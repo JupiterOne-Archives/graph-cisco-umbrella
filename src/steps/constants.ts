@@ -7,7 +7,6 @@ import {
 export const Steps = {
   ACCOUNT: 'fetch-account',
   DESTINATION: 'fetch-destinations',
-  DESTINATION_LIST: 'fetch-destination-lists',
   DOMAIN: 'fetch-domains',
   NETWORK: 'fetch-networks',
   NETWORK_TUNNEL: 'fetch-network-tunnels',
@@ -78,11 +77,10 @@ export const Entities: Record<
   NETWORK_TUNNEL: {
     resourceName: 'Network Tunnel',
     _type: 'cisco_umbrella_network_tunnel',
-    _class: ['Network'],
+    _class: ['NetworkEndpoint'],
     schema: {
       properties: {
         name: { type: 'string' },
-        CIDR: { type: '[string]' },
       },
     },
   },
@@ -122,12 +120,12 @@ export const Relationships: Record<
   | 'ACCOUNT_HAS_SITE'
   | 'SITE_HAS_VIRTUAL_APPLIANCE'
   | 'ACCOUNT_HAS_NETWORK'
-  | 'NETWORK_TUNNEL_CONNECTS_NETWORK'
   | 'SITE_HAS_NETWORK_TUNNEL'
   | 'ACCOUNT_HAS_POLICY'
   | 'ACCOUNT_HAS_DESTINATION_LIST'
   | 'DESTINATION_LIST_HAS_DESTINATION'
-  | 'VIRTUAL_APPLIANCE_USES_DOMAIN',
+  | 'VIRTUAL_APPLIANCE_USES_DOMAIN'
+  | 'ACCOUNT_HAS_DOMAIN',
   StepRelationshipMetadata
 > = {
   ACCOUNT_HAS_SITE: {
@@ -141,12 +139,6 @@ export const Relationships: Record<
     sourceType: Entities.SITE._type,
     _class: RelationshipClass.HAS,
     targetType: Entities.VIRTUAL_APPLIANCE._type,
-  },
-  NETWORK_TUNNEL_CONNECTS_NETWORK: {
-    _type: 'cisco_umbrella_network_tunnel_connects_network',
-    sourceType: Entities.NETWORK_TUNNEL._type,
-    _class: RelationshipClass.CONNECTS,
-    targetType: Entities.NETWORK._type,
   },
   SITE_HAS_NETWORK_TUNNEL: {
     _type: 'cisco_umbrella_site_has_network_tunnel',
@@ -182,6 +174,12 @@ export const Relationships: Record<
     _type: 'cisco_umbrella_virtual_appliance_uses_domain',
     sourceType: Entities.VIRTUAL_APPLIANCE._type,
     _class: RelationshipClass.USES,
+    targetType: Entities.DOMAIN._type,
+  },
+  ACCOUNT_HAS_DOMAIN: {
+    _type: 'cisco_umbrella_account_has_domain',
+    sourceType: Entities.ACCOUNT._type,
+    _class: RelationshipClass.HAS,
     targetType: Entities.DOMAIN._type,
   },
 };

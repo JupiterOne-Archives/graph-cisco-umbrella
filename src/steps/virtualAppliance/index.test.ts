@@ -9,7 +9,7 @@ afterEach(async () => {
   await recording.stop();
 });
 
-test.skip('fetch-virtual-applainces', async () => {
+test('fetch-virtual-applainces', async () => {
   recording = setupProjectRecording({
     directory: __dirname,
     name: 'fetch-virtual-applainces',

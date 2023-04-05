@@ -15,7 +15,7 @@ test('fetch-destination-lists', async () => {
     name: 'fetch-destination-lists',
   });
 
-  const stepConfig = buildStepTestConfigForStep(Steps.DESTINATION_LIST);
+  const stepConfig = buildStepTestConfigForStep(Steps.DESTINATION);
   const stepResult = await executeStepWithDependencies(stepConfig);
   expect(stepResult).toMatchStepMetadata(stepConfig);
 });
