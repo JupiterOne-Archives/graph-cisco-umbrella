@@ -1,7 +1,10 @@
 import {
+  createDirectRelationship,
   createIntegrationEntity,
   Entity,
   parseTimePropertyValue,
+  Relationship,
+  RelationshipClass,
 } from '@jupiterone/integration-sdk-core';
 import { NetworkTunnel } from '../../types';
 
@@ -35,5 +38,16 @@ export function createNetworkTunnelEntity(tunnel: NetworkTunnel): Entity {
         internal: true,
       },
     },
+  });
+}
+
+export function createSiteTunnelRelationship(
+  site: Entity,
+  tunnel: Entity,
+): Relationship {
+  return createDirectRelationship({
+    _class: RelationshipClass.HAS,
+    from: site,
+    to: tunnel,
   });
 }

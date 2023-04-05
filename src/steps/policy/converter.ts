@@ -1,7 +1,10 @@
 import {
+  createDirectRelationship,
   createIntegrationEntity,
   Entity,
   parseTimePropertyValue,
+  Relationship,
+  RelationshipClass,
 } from '@jupiterone/integration-sdk-core';
 import { Policy } from '../../types';
 
@@ -32,5 +35,16 @@ export function createPolicyEntity(policy: Policy): Entity {
         priority: policy.priority,
       },
     },
+  });
+}
+
+export function createAccountPolicyRelationship(
+  account: Entity,
+  policy: Entity,
+): Relationship {
+  return createDirectRelationship({
+    _class: RelationshipClass.HAS,
+    from: account,
+    to: policy,
   });
 }

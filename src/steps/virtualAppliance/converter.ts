@@ -1,7 +1,10 @@
 import {
+  createDirectRelationship,
   createIntegrationEntity,
   Entity,
   parseTimePropertyValue,
+  Relationship,
+  RelationshipClass,
 } from '@jupiterone/integration-sdk-core';
 import { VirtualAppliance } from '../../types';
 
@@ -26,7 +29,9 @@ export function createVirtualApplianceEntity(
         createdOn: parseTimePropertyValue(appliance.createdAt),
         stateUpdatedOn: parseTimePropertyValue(appliance.stateUpdatedAt),
         originId: appliance.originId,
-        type: appliance.type,
+        category: ['application'],
+        function: ['remote-access-gateway'],
+        public: true, // TODO adam-in-ict is there a better option for these three hardcoded?
         internalIPs: appliance.settings.internalIPs,
         externalIP: appliance.settings.externalIP,
         uptime: appliance.settings.uptime,
@@ -35,5 +40,27 @@ export function createVirtualApplianceEntity(
         isUpgradeable: appliance.isUpgradable,
       },
     },
+  });
+}
+
+export function createSiteVirtualApplianceRelationship(
+  site: Entity,
+  virtualAppliance: Entity,
+): Relationship {
+  return createDirectRelationship({
+    _class: RelationshipClass.HAS,
+    from: site,
+    to: virtualAppliance,
+  });
+}
+
+export function createVirtualApplianceDomainRelationship(
+  virtualAppliance: Entity,
+  domain: Entity,
+): Relationship {
+  return createDirectRelationship({
+    _class: RelationshipClass.USES,
+    from: virtualAppliance,
+    to: domain,
   });
 }

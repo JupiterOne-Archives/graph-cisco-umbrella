@@ -1,11 +1,14 @@
 import {
+  Entity,
   IntegrationStep,
   IntegrationStepExecutionContext,
 } from '@jupiterone/integration-sdk-core';
 
 import { getOrCreateAPIClient } from '../../client';
 import { IntegrationConfig } from '../../config';
-import { Entities, Steps } from '../constants';
+import { ACCOUNT_ENTITY_KEY } from '../account';
+import { Entities, Relationships, Steps } from '../constants';
+import { createAccountSiteRelationship } from '../site/converter';
 import { createPolicyEntity } from './converter';
 
 export async function fetchPolicies({
@@ -15,8 +18,14 @@ export async function fetchPolicies({
 }: IntegrationStepExecutionContext<IntegrationConfig>) {
   const apiClient = getOrCreateAPIClient(instance.config, logger);
 
+  const accountEntity = (await jobState.getData(ACCOUNT_ENTITY_KEY)) as Entity;
+
   await apiClient.iteratePolicies(async (policy) => {
-    await jobState.addEntity(createPolicyEntity(policy));
+    const policyEntity = await jobState.addEntity(createPolicyEntity(policy));
+
+    await jobState.addRelationship(
+      createAccountSiteRelationship(accountEntity, policyEntity),
+    );
   });
 }
 
@@ -25,8 +34,8 @@ export const policySteps: IntegrationStep<IntegrationConfig>[] = [
     id: Steps.POLICY,
     name: 'Fetch Policies',
     entities: [Entities.POLICY],
-    relationships: [],
-    dependsOn: [],
+    relationships: [Relationships.ACCOUNT_HAS_POLICY],
+    dependsOn: [Steps.ACCOUNT],
     executionHandler: fetchPolicies,
   },
 ];

@@ -107,6 +107,23 @@ The following entities are created:
 | Site              | `cisco_umbrella_site`              | `Site`          |
 | Virtual Appliance | `cisco_umbrella_virtual_appliance` | `Gateway`       |
 
+### Relationships
+
+The following relationships are created:
+
+| Source Entity `_type`              | Relationship `_class` | Target Entity `_type`              |
+| ---------------------------------- | --------------------- | ---------------------------------- |
+| `cisco_umbrella_account`           | **HAS**               | `cisco_umbrella_destination_list`  |
+| `cisco_umbrella_account`           | **HAS**               | `cisco_umbrella_network`           |
+| `cisco_umbrella_account`           | **HAS**               | `cisco_umbrella_policy`            |
+| `cisco_umbrella_account`           | **HAS**               | `cisco_umbrella_site`              |
+| `cisco_umbrella_destination_list`  | **HAS**               | `cisco_umbrella_destination`       |
+| `cisco_umbrella_network_tunnel`    | **CONNECTS**          | `cisco_umbrella_network`           |
+| `cisco_umbrella_site`              | **HAS**               | `cisco_umbrella_network_tunnel`    |
+| `cisco_umbrella_site`              | **HAS**               | `cisco_umbrella_network_tunnel`    |
+| `cisco_umbrella_site`              | **HAS**               | `cisco_umbrella_virtual_appliance` |
+| `cisco_umbrella_virtual_appliance` | **USES**              | `cisco_umbrella_domain`            |
+
 <!--
 ********************************************************************************
 END OF GENERATED DOCUMENTATION AFTER BELOW MARKER

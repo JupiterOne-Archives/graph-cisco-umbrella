@@ -1,14 +1,17 @@
 import {
+  createDirectRelationship,
   createIntegrationEntity,
   Entity,
   parseTimePropertyValue,
+  Relationship,
+  RelationshipClass,
 } from '@jupiterone/integration-sdk-core';
 import { Site } from '../../types';
 
 import { Entities } from '../constants';
 
-export function createSiteKey(name: string) {
-  return `${Entities.SITE._type}:${name}`;
+export function createSiteKey(id: number) {
+  return `${Entities.SITE._type}:${id}`;
 }
 
 export function createSiteEntity(site: Site): Entity {
@@ -16,7 +19,7 @@ export function createSiteEntity(site: Site): Entity {
     entityData: {
       source: site,
       assign: {
-        _key: createSiteKey(site.name),
+        _key: createSiteKey(site.siteId),
         _type: Entities.SITE._type,
         _class: Entities.SITE._class,
         name: site.name,
@@ -27,5 +30,16 @@ export function createSiteEntity(site: Site): Entity {
         originId: site.originId,
       },
     },
+  });
+}
+
+export function createAccountSiteRelationship(
+  account: Entity,
+  site: Entity,
+): Relationship {
+  return createDirectRelationship({
+    _class: RelationshipClass.HAS,
+    from: account,
+    to: site,
   });
 }

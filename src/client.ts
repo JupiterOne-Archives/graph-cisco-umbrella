@@ -11,7 +11,7 @@ import {
   Destination,
   DestinationList,
   Domain,
-  Network,
+  InternalNetwork,
   NetworkTunnel,
   Policy,
   SessionTokenResponse,
@@ -245,7 +245,7 @@ export class APIClient {
   public async iterateDomains(
     iteratee: ResourceIteratee<Domain>,
   ): Promise<void> {
-    await this.requestIteratorWithNestedData<Domain>(
+    await this.requestIterator<Domain>(
       `/deployments/v2/internaldomains`,
       iteratee,
     );
@@ -257,9 +257,12 @@ export class APIClient {
    * @param iteratee receives each source to produce entities/relationships
    */
   public async iterateNetworks(
-    iteratee: ResourceIteratee<Network>,
+    iteratee: ResourceIteratee<InternalNetwork>,
   ): Promise<void> {
-    await this.requestIterator<Network>(`/deployments/v2/networks`, iteratee);
+    await this.requestIterator<InternalNetwork>(
+      `/deployments/v2/internalnetworks`,
+      iteratee,
+    );
   }
 
   /**

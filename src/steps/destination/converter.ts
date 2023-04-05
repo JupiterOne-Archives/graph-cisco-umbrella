@@ -1,7 +1,10 @@
 import {
+  createDirectRelationship,
   createIntegrationEntity,
   Entity,
   parseTimePropertyValue,
+  Relationship,
+  RelationshipClass,
 } from '@jupiterone/integration-sdk-core';
 import { Destination, DestinationList } from '../../types';
 
@@ -56,5 +59,27 @@ export function createDestinationEntity(destination: Destination): Entity {
         comment: destination.comment,
       },
     },
+  });
+}
+
+export function createAccountDestinationListRelationship(
+  account: Entity,
+  destination: Entity,
+): Relationship {
+  return createDirectRelationship({
+    _class: RelationshipClass.HAS,
+    from: account,
+    to: destination,
+  });
+}
+
+export function createDestinationListDestinationRelationship(
+  destination: Entity,
+  destinationList: Entity,
+): Relationship {
+  return createDirectRelationship({
+    _class: RelationshipClass.HAS,
+    from: destination,
+    to: destinationList,
   });
 }

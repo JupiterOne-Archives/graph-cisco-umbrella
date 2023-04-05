@@ -1,9 +1,12 @@
 import {
+  createDirectRelationship,
   createIntegrationEntity,
   Entity,
   parseTimePropertyValue,
+  Relationship,
+  RelationshipClass,
 } from '@jupiterone/integration-sdk-core';
-import { Network } from '../../types';
+import { InternalNetwork } from '../../types';
 
 import { Entities } from '../constants';
 
@@ -11,7 +14,7 @@ export function createNetworkKey(name: string) {
   return `${Entities.NETWORK._type}:${name}`;
 }
 
-export function createNetworkEntity(network: Network): Entity {
+export function createNetworkEntity(network: InternalNetwork): Entity {
   return createIntegrationEntity({
     entityData: {
       source: network,
@@ -22,11 +25,46 @@ export function createNetworkEntity(network: Network): Entity {
         name: network.name,
         displayName: network.name,
         createdOn: parseTimePropertyValue(network.createdAt),
+        CIDR: null,
+        public: true, // TODO
+        internal: true, // TODO
         ipAddress: network.ipAddress,
         prefixLength: network.prefixLength,
         originId: network.originId,
-        status: network.status,
       },
     },
+  });
+}
+
+export function createAccountNetworkRelationship(
+  account: Entity,
+  network: Entity,
+): Relationship {
+  return createDirectRelationship({
+    _class: RelationshipClass.HAS,
+    from: account,
+    to: network,
+  });
+}
+
+export function createTunnelNetworkRelationship(
+  tunnel: Entity,
+  network: Entity,
+): Relationship {
+  return createDirectRelationship({
+    _class: RelationshipClass.CONNECTS,
+    from: tunnel,
+    to: network,
+  });
+}
+
+export function createSiteTunnelRelationship(
+  site: Entity,
+  tunnel: Entity,
+): Relationship {
+  return createDirectRelationship({
+    _class: RelationshipClass.HAS,
+    from: site,
+    to: tunnel,
   });
 }

@@ -1,14 +1,18 @@
 import {
+  Entity,
   IntegrationStep,
   IntegrationStepExecutionContext,
 } from '@jupiterone/integration-sdk-core';
 
 import { getOrCreateAPIClient } from '../../client';
 import { IntegrationConfig } from '../../config';
-import { Entities, Steps } from '../constants';
+import { ACCOUNT_ENTITY_KEY } from '../account';
+import { Entities, Relationships, Steps } from '../constants';
 import {
   createDestinationListEntity,
   createDestinationEntity,
+  createAccountDestinationListRelationship,
+  createDestinationListDestinationRelationship,
 } from './converter';
 
 export async function fetchDestinations({
@@ -18,13 +22,32 @@ export async function fetchDestinations({
 }: IntegrationStepExecutionContext<IntegrationConfig>) {
   const apiClient = getOrCreateAPIClient(instance.config, logger);
 
+  const accountEntity = (await jobState.getData(ACCOUNT_ENTITY_KEY)) as Entity;
+
   await apiClient.iterateDestinationLists(async (destinationList) => {
-    await jobState.addEntity(createDestinationListEntity(destinationList));
+    const destinationListEntity = await jobState.addEntity(
+      createDestinationListEntity(destinationList),
+    );
+
+    await jobState.addRelationship(
+      createAccountDestinationListRelationship(
+        accountEntity,
+        destinationListEntity,
+      ),
+    );
 
     await apiClient.iterateDestinations(
       destinationList.id,
       async (destination) => {
-        await jobState.addEntity(createDestinationEntity(destination));
+        const destinationEntity = await jobState.addEntity(
+          createDestinationEntity(destination),
+        );
+        await jobState.addRelationship(
+          createDestinationListDestinationRelationship(
+            destinationListEntity,
+            destinationEntity,
+          ),
+        );
       },
     );
   });
@@ -35,8 +58,11 @@ export const destinationSteps: IntegrationStep<IntegrationConfig>[] = [
     id: Steps.DESTINATION_LIST,
     name: 'Fetch Destinations',
     entities: [Entities.DESTINATION_LIST, Entities.DESTINATION],
-    relationships: [],
-    dependsOn: [],
+    relationships: [
+      Relationships.ACCOUNT_HAS_DESTINATION_LIST,
+      Relationships.DESTINATION_LIST_HAS_DESTINATION,
+    ],
+    dependsOn: [Steps.ACCOUNT],
     executionHandler: fetchDestinations,
   },
 ];

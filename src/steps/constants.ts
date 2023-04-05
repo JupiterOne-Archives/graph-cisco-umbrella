@@ -1,4 +1,8 @@
-import { StepEntityMetadata } from '@jupiterone/integration-sdk-core';
+import {
+  RelationshipClass,
+  StepEntityMetadata,
+  StepRelationshipMetadata,
+} from '@jupiterone/integration-sdk-core';
 
 export const Steps = {
   ACCOUNT: 'fetch-account',
@@ -114,16 +118,70 @@ export const Entities: Record<
   },
 };
 
-/*
 export const Relationships: Record<
-  'ACCOUNT_HAS_USER',
+  | 'ACCOUNT_HAS_SITE'
+  | 'SITE_HAS_VIRTUAL_APPLIANCE'
+  | 'ACCOUNT_HAS_NETWORK'
+  | 'NETWORK_TUNNEL_CONNECTS_NETWORK'
+  | 'SITE_HAS_NETWORK_TUNNEL'
+  | 'ACCOUNT_HAS_POLICY'
+  | 'ACCOUNT_HAS_DESTINATION_LIST'
+  | 'DESTINATION_LIST_HAS_DESTINATION'
+  | 'VIRTUAL_APPLIANCE_USES_DOMAIN',
   StepRelationshipMetadata
 > = {
-  ACCOUNT_HAS_USER: {
-    _type: 'acme_account_has_user',
+  ACCOUNT_HAS_SITE: {
+    _type: 'cisco_umbrella_account_has_site',
     sourceType: Entities.ACCOUNT._type,
     _class: RelationshipClass.HAS,
-    targetType: Entities.USER._type,
+    targetType: Entities.SITE._type,
+  },
+  SITE_HAS_VIRTUAL_APPLIANCE: {
+    _type: 'cisco_umbrella_site_has_virtual_appliance',
+    sourceType: Entities.SITE._type,
+    _class: RelationshipClass.HAS,
+    targetType: Entities.VIRTUAL_APPLIANCE._type,
+  },
+  NETWORK_TUNNEL_CONNECTS_NETWORK: {
+    _type: 'cisco_umbrella_network_tunnel_connects_network',
+    sourceType: Entities.NETWORK_TUNNEL._type,
+    _class: RelationshipClass.CONNECTS,
+    targetType: Entities.NETWORK._type,
+  },
+  SITE_HAS_NETWORK_TUNNEL: {
+    _type: 'cisco_umbrella_site_has_network_tunnel',
+    sourceType: Entities.SITE._type,
+    _class: RelationshipClass.HAS,
+    targetType: Entities.NETWORK_TUNNEL._type,
+  },
+  ACCOUNT_HAS_NETWORK: {
+    _type: 'cisco_umbrella_account_has_network',
+    sourceType: Entities.ACCOUNT._type,
+    _class: RelationshipClass.HAS,
+    targetType: Entities.NETWORK._type,
+  },
+  ACCOUNT_HAS_POLICY: {
+    _type: 'cisco_umbrella_account_has_policy',
+    sourceType: Entities.ACCOUNT._type,
+    _class: RelationshipClass.HAS,
+    targetType: Entities.POLICY._type,
+  },
+  ACCOUNT_HAS_DESTINATION_LIST: {
+    _type: 'cisco_umbrella_account_has_destination_list',
+    sourceType: Entities.ACCOUNT._type,
+    _class: RelationshipClass.HAS,
+    targetType: Entities.DESTINATION_LIST._type,
+  },
+  DESTINATION_LIST_HAS_DESTINATION: {
+    _type: 'cisco_umbrella_destination_list_has_destination',
+    sourceType: Entities.DESTINATION_LIST._type,
+    _class: RelationshipClass.HAS,
+    targetType: Entities.DESTINATION._type,
+  },
+  VIRTUAL_APPLIANCE_USES_DOMAIN: {
+    _type: 'cisco_umbrella_virtual_appliance_uses_domain',
+    sourceType: Entities.VIRTUAL_APPLIANCE._type,
+    _class: RelationshipClass.USES,
+    targetType: Entities.DOMAIN._type,
   },
 };
-*/
