@@ -25,9 +25,9 @@ export function createNetworkEntity(network: InternalNetwork): Entity {
         name: network.name,
         displayName: network.name,
         createdOn: parseTimePropertyValue(network.createdAt),
-        CIDR: null,
-        public: true, // TODO
-        internal: true, // TODO
+        CIDR: null, // TODO adam-in-ict how should we handle these three items?
+        public: true,
+        internal: true,
         ipAddress: network.ipAddress,
         prefixLength: network.prefixLength,
         originId: network.originId,

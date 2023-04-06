@@ -171,7 +171,8 @@ export class APIClient {
   }
 
   /**
-   * Performs generic request with iterator.
+   * Performs generic request with iterator including additional response data
+   * that some particular Cisco Umbrella API calls include with the general response.
    *
    * @param requestUrl string to append to base URL for the particular request
    * @param iteratee receives each source to produce entities/relationships
