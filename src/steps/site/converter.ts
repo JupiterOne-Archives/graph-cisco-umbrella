@@ -26,7 +26,7 @@ export function createSiteEntity(site: Site): Entity {
         displayName: site.name,
         createdOn: parseTimePropertyValue(site.createdAt),
         lastModifiedOn: parseTimePropertyValue(site.modifiedAt),
-        isDefault: site.isDefault,
+        default: site.isDefault,
         originId: site.originId,
       },
     },

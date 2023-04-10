@@ -29,7 +29,7 @@ export function createPolicyEntity(policy: Policy): Entity {
         content: '',
         displayName: policy.name,
         createdOn: parseTimePropertyValue(policy.createdAt),
-        isDefault: policy.isDefault,
+        default: policy.isDefault,
         organizationId: policy.organizationId,
         priority: policy.priority,
       },
