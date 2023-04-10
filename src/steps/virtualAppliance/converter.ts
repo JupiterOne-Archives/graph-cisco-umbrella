@@ -32,12 +32,12 @@ export function createVirtualApplianceEntity(
         category: ['application'],
         function: ['remote-access-gateway'],
         public: true, // TODO adam-in-ict is there a better option for these three hardcoded?
-        internalIPs: appliance.settings.internalIPs,
-        externalIP: appliance.settings.externalIP,
+        privateIpAddress: appliance.settings.internalIPs,
+        publicIpAddress: appliance.settings.externalIP,
         uptime: appliance.settings.uptime,
         health: appliance.health,
         lastSyncOn: parseTimePropertyValue(appliance.settings.lastSyncTime),
-        isUpgradeable: appliance.isUpgradable,
+        upgradeable: appliance.isUpgradable,
       },
     },
   });
