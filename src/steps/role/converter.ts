@@ -1,9 +1,6 @@
 import {
-  createDirectRelationship,
   createIntegrationEntity,
   Entity,
-  Relationship,
-  RelationshipClass,
 } from '@jupiterone/integration-sdk-core';
 import { Role } from '../../types';
 
