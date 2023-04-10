@@ -23,7 +23,9 @@ export async function fetchNetworkTunnels({
 
   await jobState.iterateEntities({ _type: Entities.SITE._type }, (site) => {
     const siteRawData = getRawData<Site>(site);
-    siteLookup[siteRawData.originId] = site._key;
+    if (siteRawData) {
+      siteLookup[siteRawData.originId] = site._key;
+    }
   });
 
   await apiClient.iterateNetworkTunnels(async (tunnel) => {
