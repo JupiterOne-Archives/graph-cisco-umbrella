@@ -25,8 +25,11 @@ export function createDeviceEntity(device: Device): Entity {
         name: device.name,
         displayName: device.name,
         deviceId: device.deviceId,
-        serialNumber: device.serialNumber,
+        serial: device.serialNumber,
         createdOn: parseTimePropertyValue(device.createdAt),
+        category: 'network',
+        make: null,
+        model: null,
       },
     },
   });

@@ -10,7 +10,7 @@ afterEach(async () => {
 });
 
 // We currently have to skip this until we get devices added to a test environment
-test.skip('fetch-devices', async () => {
+test('fetch-devices', async () => {
   recording = setupProjectRecording({
     directory: __dirname,
     name: 'fetch-devices',
