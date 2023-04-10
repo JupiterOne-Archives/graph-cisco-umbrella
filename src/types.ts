@@ -152,6 +152,65 @@ export interface Destination {
   createdAt: string;
 }
 
+export interface Application {
+  id: string;
+  name: string;
+  label: string;
+  weightedRisk: string;
+  category: string;
+  appType: string;
+  sources: [ApplicationSource | ApplicationSWGSource];
+  firstDetected: string;
+  lastDetected: string;
+}
+
+export interface ApplicationCategory {
+  name: string;
+}
+
+export interface ApplicationSource {
+  name: 'dns' | 'cdfw';
+  events: number;
+  blockedEvents: number;
+}
+
+export interface ApplicationSWGSource {
+  name: 'swg';
+  totalTraffic: number;
+  bytesIn: number;
+  bytesOut: number;
+  blockedBytesOut: number;
+}
+
+export interface User {
+  id: number;
+  firstname: string;
+  lastname: string;
+  email: string;
+  role: string;
+  roleId: number;
+  timezone: string;
+  status: string;
+  lastLoginTime: string;
+  twoFactorEnable: boolean;
+}
+
+export interface Role {
+  organizationId: number;
+  label: string;
+  roleId: number;
+}
+
+export interface Device {
+  originId: number;
+  deviceId: string;
+  deviceKey: string;
+  name: string;
+  serialNumber: string;
+  createdAt: string;
+  organizationId: number;
+}
+
 export interface UmbrellaMetaResponse<T> {
   status: {
     code: number;

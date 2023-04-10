@@ -6,24 +6,34 @@ import {
 
 export const Steps = {
   ACCOUNT: 'fetch-account',
+  APPLICATION: 'fetch-applications',
+  APPLICATION_CATEGORY: 'fetch-application-categories',
   DESTINATION: 'fetch-destinations',
+  DEVICE: 'fetch-devices',
   DOMAIN: 'fetch-domains',
   NETWORK: 'fetch-networks',
   NETWORK_TUNNEL: 'fetch-network-tunnels',
   POLICY: 'fetch-policies',
+  ROLE: 'fetch-roles',
   SITE: 'fetch-sites',
+  USER: 'fetch-users',
   VIRTUAL_APPLIANCE: 'fetch-virtual-appliances',
 };
 
 export const Entities: Record<
   | 'ACCOUNT'
+  | 'APPLICATION'
+  | 'APPLICATION_CATEGORY'
   | 'DESTINATION'
   | 'DESTINATION_LIST'
+  | 'DEVICE'
   | 'DOMAIN'
   | 'NETWORK'
   | 'NETWORK_TUNNEL'
   | 'POLICY'
+  | 'ROLE'
   | 'SITE'
+  | 'USER'
   | 'VIRTUAL_APPLIANCE',
   StepEntityMetadata
 > = {
@@ -31,6 +41,16 @@ export const Entities: Record<
     resourceName: 'Account',
     _type: 'cisco_umbrella_account',
     _class: ['Account'],
+  },
+  APPLICATION: {
+    resourceName: 'Application',
+    _type: 'cisco_umbrella_application',
+    _class: ['Application'],
+  },
+  APPLICATION_CATEGORY: {
+    resourceName: 'Application Category',
+    _type: 'cisco_umbrella_application_category',
+    _class: ['Group'],
   },
   DESTINATION: {
     resourceName: 'Destination',
@@ -41,6 +61,11 @@ export const Entities: Record<
     resourceName: 'Destination List',
     _type: 'cisco_umbrella_destination_list',
     _class: ['Record'],
+  },
+  DEVICE: {
+    resourceName: 'Network Device',
+    _type: 'cisco_umbrella_device',
+    _class: ['Device'],
   },
   DOMAIN: {
     resourceName: 'Domain',
@@ -62,10 +87,20 @@ export const Entities: Record<
     _type: 'cisco_umbrella_policy',
     _class: ['Policy'],
   },
+  ROLE: {
+    resourceName: 'System Role',
+    _type: 'cisco_umbrella_role',
+    _class: ['AccessRole'],
+  },
   SITE: {
     resourceName: 'Site',
     _type: 'cisco_umbrella_site',
     _class: ['Site'],
+  },
+  USER: {
+    resourceName: 'System User',
+    _type: 'cisco_umbrella_user',
+    _class: ['User'],
   },
   VIRTUAL_APPLIANCE: {
     resourceName: 'Virtual Appliance',
@@ -76,6 +111,9 @@ export const Entities: Record<
 
 export const Relationships: Record<
   | 'ACCOUNT_HAS_SITE'
+  | 'ACCOUNT_HAS_APPLICATION'
+  | 'ACCOUNT_HAS_DEVICE'
+  | 'ACCOUNT_HAS_USER'
   | 'SITE_HAS_VIRTUAL_APPLIANCE'
   | 'ACCOUNT_HAS_NETWORK'
   | 'SITE_HAS_NETWORK_TUNNEL'
@@ -83,7 +121,8 @@ export const Relationships: Record<
   | 'ACCOUNT_HAS_DESTINATION_LIST'
   | 'DESTINATION_LIST_HAS_DESTINATION'
   | 'VIRTUAL_APPLIANCE_USES_DOMAIN'
-  | 'ACCOUNT_HAS_DOMAIN',
+  | 'ACCOUNT_HAS_DOMAIN'
+  | 'USER_ASSIGNED_ROLE',
   StepRelationshipMetadata
 > = {
   ACCOUNT_HAS_SITE: {
@@ -91,6 +130,24 @@ export const Relationships: Record<
     sourceType: Entities.ACCOUNT._type,
     _class: RelationshipClass.HAS,
     targetType: Entities.SITE._type,
+  },
+  ACCOUNT_HAS_APPLICATION: {
+    _type: 'cisco_umbrella_account_has_application',
+    sourceType: Entities.ACCOUNT._type,
+    _class: RelationshipClass.HAS,
+    targetType: Entities.APPLICATION._type,
+  },
+  ACCOUNT_HAS_DEVICE: {
+    _type: 'cisco_umbrella_account_has_device',
+    sourceType: Entities.ACCOUNT._type,
+    _class: RelationshipClass.HAS,
+    targetType: Entities.DEVICE._type,
+  },
+  ACCOUNT_HAS_USER: {
+    _type: 'cisco_umbrella_account_has_user',
+    sourceType: Entities.ACCOUNT._type,
+    _class: RelationshipClass.HAS,
+    targetType: Entities.USER._type,
   },
   SITE_HAS_VIRTUAL_APPLIANCE: {
     _type: 'cisco_umbrella_site_has_virtual_appliance',
@@ -139,5 +196,11 @@ export const Relationships: Record<
     sourceType: Entities.ACCOUNT._type,
     _class: RelationshipClass.HAS,
     targetType: Entities.DOMAIN._type,
+  },
+  USER_ASSIGNED_ROLE: {
+    _type: 'cisco_umbrella_user_assigned_role',
+    sourceType: Entities.USER._type,
+    _class: RelationshipClass.ASSIGNED,
+    targetType: Entities.ROLE._type,
   },
 };

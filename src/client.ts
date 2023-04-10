@@ -8,15 +8,20 @@ import {
 } from '@jupiterone/integration-sdk-core';
 import { GaxiosError, GaxiosOptions, GaxiosResponse, request } from 'gaxios';
 import {
+  Application,
+  ApplicationCategory,
   Destination,
   DestinationList,
+  Device,
   Domain,
   InternalNetwork,
   NetworkTunnel,
   Policy,
+  Role,
   SessionTokenResponse,
   Site,
   UmbrellaMetaResponse,
+  User,
   VirtualAppliance,
 } from './types';
 
@@ -158,7 +163,7 @@ export class APIClient {
         headers: this.headers,
       };
       const response = await this.requestWithRetry<[T]>(requestOpts);
-      if (response?.data) {
+      if (response?.data && response.data.length > 0) {
         receivedCount = response.data.length;
         for (const item of response.data) {
           await iteratee(item);
@@ -312,6 +317,66 @@ export class APIClient {
       `/deployments/v2/virtualappliances`,
       iteratee,
     );
+  }
+
+  /**
+   * Iterates each application scanned by the provider.
+   *
+   * @param iteratee receives each source to produce entities/relationships
+   */
+  public async iterateApplications(
+    iteratee: ResourceIteratee<Application>,
+  ): Promise<void> {
+    await this.requestIterator<Application>(
+      `/reports/v2/appDiscovery/applications`,
+      iteratee,
+    );
+  }
+
+  /**
+   * Iterates each application category in the provider.
+   *
+   * @param iteratee receives each source to produce entities/relationships
+   */
+  public async iterateApplicationCategories(
+    iteratee: ResourceIteratee<ApplicationCategory>,
+  ): Promise<void> {
+    await this.requestIterator<ApplicationCategory>(
+      `/reports/v2/appDiscovery/applicationCategories`,
+      iteratee,
+    );
+  }
+
+  /**
+   * Iterates each device in the provider.
+   *
+   * @param iteratee receives each source to produce entities/relationships
+   */
+  public async iterateDevices(
+    iteratee: ResourceIteratee<Device>,
+  ): Promise<void> {
+    await this.requestIterator<Device>(
+      `/deployments/v2/networkdevices`,
+      iteratee,
+    );
+  }
+
+  /**
+   * Iterates each user in the provider.
+   *
+   * @param iteratee receives each source to produce entities/relationships
+   */
+  public async iterateUsers(iteratee: ResourceIteratee<User>): Promise<void> {
+    await this.requestIterator<User>(`/admin/v2/users`, iteratee);
+  }
+
+  /**
+   * Iterates each role in the provider.
+   *
+   * @param iteratee receives each source to produce entities/relationships
+   */
+  public async iterateRoles(iteratee: ResourceIteratee<Role>): Promise<void> {
+    await this.requestIterator<Role>(`/admin/v2/roles`, iteratee);
   }
 
   private createIntegrationError(
