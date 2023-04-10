@@ -27,7 +27,6 @@ export function createPolicyEntity(policy: Policy): Entity {
         title: policy.name,
         summary: policy.name,
         content: '',
-        type: '',
         displayName: policy.name,
         createdOn: parseTimePropertyValue(policy.createdAt),
         isDefault: policy.isDefault,
