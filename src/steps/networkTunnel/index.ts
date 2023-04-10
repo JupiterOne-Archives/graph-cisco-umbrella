@@ -22,7 +22,7 @@ export async function fetchNetworkTunnels({
   const apiClient = getOrCreateAPIClient(instance.config, logger);
 
   await jobState.iterateEntities({ _type: Entities.SITE._type }, (site) => {
-    const siteRawData = getRawData(site) as Site;
+    const siteRawData = getRawData<Site>(site);
     siteLookup[siteRawData.originId] = site._key;
   });
 
