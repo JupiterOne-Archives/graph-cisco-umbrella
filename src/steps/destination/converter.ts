@@ -31,7 +31,7 @@ export function createDestinationListEntity(
         name: destinationList.name,
         displayName: destinationList.name,
         access: destinationList.access,
-        isGlobal: destinationList.isGlobal,
+        global: destinationList.isGlobal,
         createdOn: parseTimePropertyValue(destinationList.createdAt, 'sec'),
         modifiedOn: parseTimePropertyValue(destinationList.modifiedAt, 'sec'),
         isMspDefault: destinationList.isMspDefault,
