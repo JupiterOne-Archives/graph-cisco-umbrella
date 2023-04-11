@@ -52,7 +52,10 @@ export const applicationSteps: IntegrationStep<IntegrationConfig>[] = [
     id: Steps.APPLICATION,
     name: 'Fetch Applications',
     entities: [Entities.APPLICATION],
-    relationships: [Relationships.ACCOUNT_HAS_APPLICATION],
+    relationships: [
+      Relationships.ACCOUNT_HAS_APPLICATION,
+      Relationships.APPLICATION_HAS_CATEGORY,
+    ],
     dependsOn: [Steps.ACCOUNT, Steps.APPLICATION_CATEGORY],
     executionHandler: fetchApplications,
   },

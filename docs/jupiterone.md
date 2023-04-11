@@ -116,21 +116,22 @@ The following entities are created:
 
 The following relationships are created:
 
-| Source Entity `_type`              | Relationship `_class` | Target Entity `_type`              |
-| ---------------------------------- | --------------------- | ---------------------------------- |
-| `cisco_umbrella_account`           | **HAS**               | `cisco_umbrella_application`       |
-| `cisco_umbrella_account`           | **HAS**               | `cisco_umbrella_destination_list`  |
-| `cisco_umbrella_account`           | **HAS**               | `cisco_umbrella_device`            |
-| `cisco_umbrella_account`           | **HAS**               | `cisco_umbrella_domain`            |
-| `cisco_umbrella_account`           | **HAS**               | `cisco_umbrella_network`           |
-| `cisco_umbrella_account`           | **HAS**               | `cisco_umbrella_policy`            |
-| `cisco_umbrella_account`           | **HAS**               | `cisco_umbrella_site`              |
-| `cisco_umbrella_account`           | **HAS**               | `cisco_umbrella_user`              |
-| `cisco_umbrella_destination_list`  | **HAS**               | `cisco_umbrella_destination`       |
-| `cisco_umbrella_site`              | **HAS**               | `cisco_umbrella_network_tunnel`    |
-| `cisco_umbrella_site`              | **HAS**               | `cisco_umbrella_virtual_appliance` |
-| `cisco_umbrella_user`              | **ASSIGNED**          | `cisco_umbrella_role`              |
-| `cisco_umbrella_virtual_appliance` | **USES**              | `cisco_umbrella_domain`            |
+| Source Entity `_type`              | Relationship `_class` | Target Entity `_type`                 |
+| ---------------------------------- | --------------------- | ------------------------------------- |
+| `cisco_umbrella_account`           | **HAS**               | `cisco_umbrella_application`          |
+| `cisco_umbrella_account`           | **HAS**               | `cisco_umbrella_destination_list`     |
+| `cisco_umbrella_account`           | **HAS**               | `cisco_umbrella_device`               |
+| `cisco_umbrella_account`           | **HAS**               | `cisco_umbrella_domain`               |
+| `cisco_umbrella_account`           | **HAS**               | `cisco_umbrella_network`              |
+| `cisco_umbrella_account`           | **HAS**               | `cisco_umbrella_policy`               |
+| `cisco_umbrella_account`           | **HAS**               | `cisco_umbrella_site`                 |
+| `cisco_umbrella_account`           | **HAS**               | `cisco_umbrella_user`                 |
+| `cisco_umbrella_application`       | **HAS**               | `cisco_umbrella_application_category` |
+| `cisco_umbrella_destination_list`  | **HAS**               | `cisco_umbrella_destination`          |
+| `cisco_umbrella_site`              | **HAS**               | `cisco_umbrella_network_tunnel`       |
+| `cisco_umbrella_site`              | **HAS**               | `cisco_umbrella_virtual_appliance`    |
+| `cisco_umbrella_user`              | **ASSIGNED**          | `cisco_umbrella_role`                 |
+| `cisco_umbrella_virtual_appliance` | **USES**              | `cisco_umbrella_domain`               |
 
 <!--
 ********************************************************************************

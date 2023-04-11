@@ -114,6 +114,7 @@ export const Relationships: Record<
   | 'ACCOUNT_HAS_APPLICATION'
   | 'ACCOUNT_HAS_DEVICE'
   | 'ACCOUNT_HAS_USER'
+  | 'APPLICATION_HAS_CATEGORY'
   | 'SITE_HAS_VIRTUAL_APPLIANCE'
   | 'ACCOUNT_HAS_NETWORK'
   | 'SITE_HAS_NETWORK_TUNNEL'
@@ -148,6 +149,12 @@ export const Relationships: Record<
     sourceType: Entities.ACCOUNT._type,
     _class: RelationshipClass.HAS,
     targetType: Entities.USER._type,
+  },
+  APPLICATION_HAS_CATEGORY: {
+    _type: 'cisco_umbrella_application_has_category',
+    sourceType: Entities.APPLICATION._type,
+    _class: RelationshipClass.HAS,
+    targetType: Entities.APPLICATION_CATEGORY._type,
   },
   SITE_HAS_VIRTUAL_APPLIANCE: {
     _type: 'cisco_umbrella_site_has_virtual_appliance',
