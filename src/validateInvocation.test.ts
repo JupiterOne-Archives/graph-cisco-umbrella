@@ -44,7 +44,7 @@ describe('#validateInvocation', () => {
         });
 
         await expect(validateInvocation(executionContext)).rejects.toThrow(
-          'Provider authentication failed at https://api.umbrella.com//auth/v2/token: 401 Unauthorized',
+          'Provider authentication failed at https://api.umbrella.com/auth/v2/token: 401 Unauthorized',
         );
       });
 
@@ -65,7 +65,7 @@ describe('#validateInvocation', () => {
         });
 
         await expect(validateInvocation(executionContext)).rejects.toThrow(
-          'Provider authentication failed at https://api.umbrella.com//auth/v2/token: 401 Unauthorized',
+          'Provider authentication failed at https://api.umbrella.com/auth/v2/token: 401 Unauthorized',
         );
       });
     });
