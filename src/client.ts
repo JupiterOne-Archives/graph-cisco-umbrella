@@ -45,7 +45,7 @@ export class APIClient {
   private MAX_RETRIES = 3;
   private PAGE_SIZE = 100;
 
-  private BASE_URL = 'https://api.umbrella.com/';
+  private BASE_URL = 'https://api.umbrella.com';
   private headers = {
     'Content-Type': 'application/json',
     Authorization: '',
