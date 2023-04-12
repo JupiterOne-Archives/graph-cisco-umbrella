@@ -104,7 +104,7 @@ The following entities are created:
 | Destination List     | `cisco_umbrella_destination_list`     | `Record`          |
 | Domain               | `cisco_umbrella_domain`               | `Domain`          |
 | Network              | `cisco_umbrella_network`              | `Network`         |
-| Network Device       | `cisco_umbrella_device`               | `Device`          |
+| Network Device       | `cisco_umbrella_network_device`       | `Device`          |
 | Network Tunnel       | `cisco_umbrella_network_tunnel`       | `NetworkEndpoint` |
 | Policy               | `cisco_umbrella_policy`               | `Policy`          |
 | Site                 | `cisco_umbrella_site`                 | `Site`            |
@@ -120,9 +120,9 @@ The following relationships are created:
 | ---------------------------------- | --------------------- | ------------------------------------- |
 | `cisco_umbrella_account`           | **HAS**               | `cisco_umbrella_application`          |
 | `cisco_umbrella_account`           | **HAS**               | `cisco_umbrella_destination_list`     |
-| `cisco_umbrella_account`           | **HAS**               | `cisco_umbrella_device`               |
 | `cisco_umbrella_account`           | **HAS**               | `cisco_umbrella_domain`               |
 | `cisco_umbrella_account`           | **HAS**               | `cisco_umbrella_network`              |
+| `cisco_umbrella_account`           | **HAS**               | `cisco_umbrella_network_device`       |
 | `cisco_umbrella_account`           | **HAS**               | `cisco_umbrella_policy`               |
 | `cisco_umbrella_account`           | **HAS**               | `cisco_umbrella_site`                 |
 | `cisco_umbrella_account`           | **HAS**               | `cisco_umbrella_user`                 |

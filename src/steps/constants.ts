@@ -64,7 +64,7 @@ export const Entities: Record<
   },
   DEVICE: {
     resourceName: 'Network Device',
-    _type: 'cisco_umbrella_device',
+    _type: 'cisco_umbrella_network_device',
     _class: ['Device'],
   },
   DOMAIN: {
@@ -139,7 +139,7 @@ export const Relationships: Record<
     targetType: Entities.APPLICATION._type,
   },
   ACCOUNT_HAS_DEVICE: {
-    _type: 'cisco_umbrella_account_has_device',
+    _type: 'cisco_umbrella_account_has_network_device',
     sourceType: Entities.ACCOUNT._type,
     _class: RelationshipClass.HAS,
     targetType: Entities.DEVICE._type,

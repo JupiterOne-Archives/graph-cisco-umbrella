@@ -7,21 +7,21 @@ export const deviceSpec: StepSpec<IntegrationConfig>[] = [
      * ENDPOINT: https://<baseurl>/deployments/v2/networkdevices
      * PATTERN: Fetch Entities
      */
-    id: 'fetch-users',
-    name: 'Fetch Users',
+    id: 'fetch-devices',
+    name: 'Fetch Devices',
     entities: [
       {
-        resourceName: 'System User',
-        _type: 'cisco_umbrella_user',
-        _class: ['User'],
+        resourceName: 'Network Device',
+        _type: 'cisco_umbrella_network_device',
+        _class: ['Device'],
       },
     ],
     relationships: [
       {
         _class: RelationshipClass.HAS,
-        _type: 'cisco_umbrella_account_has_user',
+        _type: 'cisco_umbrella_account_has_network_device',
         sourceType: 'cisco_umbrella_account',
-        targetType: 'cisco_umbrella_user',
+        targetType: 'cisco_umbrella_network_device',
       },
     ],
     dependsOn: ['fetch-account'],

@@ -18,14 +18,14 @@ and this project adheres to
   | -------------------- | ------------------------------------- | --------------- |
   | Application          | `cisco_umbrella_application`          | `Application`   |
   | Application Category | `cisco_umbrella_application_category` | `Group`         |
-  | Network Device       | `cisco_umbrella_device`               | `Device`        |
+  | Network Device       | `cisco_umbrella_network_device`       | `Device`        |
   | System Role          | `cisco_umbrella_role`                 | `AccessRole`    |
   | System User          | `cisco_umbrella_user`                 | `User`          |
 
   | Source Entity `_type`        | Relationship `_class` | Target Entity `_type`                 |
   | ---------------------------- | --------------------- | ------------------------------------- |
   | `cisco_umbrella_account`     | **HAS**               | `cisco_umbrella_application`          |
-  | `cisco_umbrella_account`     | **HAS**               | `cisco_umbrella_device`               |
+  | `cisco_umbrella_account`     | **HAS**               | `cisco_umbrella_network_device`       |
   | `cisco_umbrella_account`     | **HAS**               | `cisco_umbrella_network`              |
   | `cisco_umbrella_account`     | **HAS**               | `cisco_umbrella_user`                 |
   | `cisco_umbrella_application` | **HAS**               | `cisco_umbrella_application_category` |
