@@ -15,7 +15,7 @@ questions:
     title: What virtual appliances have an available software update?
     description: Returns a list of virtual appliances that are currently listed as having an available update.
     queries:
-      - query: find cisco_umbrella_virtual_appliance with isUpgradeable = true
+      - query: find cisco_umbrella_virtual_appliance with upgradeable = true
     tags:
     - CiscoUmbrella
   - id: managed-question-cisco-umbrella-users-without-mfa
