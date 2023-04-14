@@ -1,28 +1,20 @@
 # Development
 
-Add details here to give a brief overview of how to work with the provider APIs.
-Please reference any SDKs or API docs used to help build the integration here.
-
-## Prerequisites
-
-Supply details about software or tooling (like maybe Docker or Terraform) that
-is needed for development here.
-
-Please supply references to documentation that details how to install those
-dependencies here.
-
-Tools like Node.js and NPM are already covered in the [README](../README.md) so
-don't bother documenting that here.
+Cisco provides a sandbox that can be used for developing against. The sandbox
+environment can be set up for as many as two weeks or as short as a few hours.
 
 ## Provider account setup
 
-Please provide information about the steps needed to create an account with a
-provider. Images and references to a provider's documentation is very helpful
-for new developers picking up your work.
+- Sign up for a [Cisco developer account](https://developer.cisco.com/).
+- Once signed up and logged in, navigate to the
+  [Cisco Lab Catalog](https://devnetsandbox.cisco.com/RM/Topology) and select
+  the Reserve button for Cisco Umbrella.
+- The system will take several minutes to set up and will email login
+  credentials to you once complete.
+- You can now log in to the Cisco Umbrella sandbox instance and create test
+  entities and relationships.
 
 ## Authentication
 
-Supply details here for information on how to authenticate with a provider so
-that developers have an idea of what's needed to hit APIs. It may be useful to
-provide explanations for each value specified in the
-[`IntegrationInstanceConfigFieldMap`](../src/config.ts).
+Using the above Cisco Umbrella sandbox account, an API key can be created with
+the same scopes recommended to end users for testing and development purposes.
