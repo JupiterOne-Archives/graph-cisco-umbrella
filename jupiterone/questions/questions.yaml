@@ -1,15 +1,35 @@
 ---
-sourceId: managed:template
+sourceId: managed:cisco-umbrella
 integrationDefinitionId: '${integration_definition_id}'
-questions: []
-  # - id: integration-question-template-replace-me
-  #   title: What kinds of questions will this integration support?
-  #   description:
-  #     TODO Every integration should contribute questions! Please be carefule
-  #     to replace this before deploying the integration to JupiterOne.
+questions:
+  # TODO we don't yet know what healthy vs unhealthy responses will look like as 
+  #      our test instances all just return informtional.
+  # - id: managed-question-cisco-umbrella-unhealthy-virtual-appliances
+  #   title: What virtual appliances are listed as unhealthy?
+  #   description: Returns a list of virtual appliances that are currently listed as unhealthy.
   #   queries:
-  #     - name: good
-  #       query: |
-  #         find * with _integrationDefinitionId = '${integration_definition_id}'
+  #     - query: find cisco_umbrella_virtual_appliance with health ~= "unhealthy"
   #   tags:
-  #     - template
+  #   - CiscoUmbrella
+  - id: managed-question-cisco-umbrella-updateable-virtual-appliances
+    title: What virtual appliances have an available software update?
+    description: Returns a list of virtual appliances that are currently listed as having an available update.
+    queries:
+      - query: find cisco_umbrella_virtual_appliance with upgradeable = true
+    tags:
+    - CiscoUmbrella
+  - id: managed-question-cisco-umbrella-users-without-mfa
+    title: What Cisco Umbrella users don't have two factor authentication enabled?
+    description: Returns a list of Cisco Umbrella users that don't have two factor authentication enabled.
+    queries:
+      - query: find cisco_umbrella_user with mfaEnabled = false
+    tags:
+    - CiscoUmbrella
+    - MFA
+  - id: managed-question-cisco-umbrella-updateable-virtual-appliances
+    title: What Cisco Umbrella discovered applications are high risk?
+    description: Returns a list of Cisco Umbrella discovered applications that are high risk.
+    queries:
+      - query: find cisco_umbrella_application with weightedRisk = "high" or weightedRisk = "veryHigh"
+    tags:
+    - CiscoUmbrella
