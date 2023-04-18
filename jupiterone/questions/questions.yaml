@@ -1,5 +1,5 @@
 ---
-sourceId: managed:template
+sourceId: managed:cisco-umbrella
 integrationDefinitionId: '${integration_definition_id}'
 questions:
   # TODO we don't yet know what healthy vs unhealthy responses will look like as 
@@ -26,9 +26,9 @@ questions:
     tags:
     - CiscoUmbrella
     - MFA
-  - id: managed-question-cisco-umbrella-updateabley-virtual-appliances
+  - id: managed-question-cisco-umbrella-updateable-virtual-appliances
     title: What Cisco Umbrella discovered applications are high risk?
-    description: Returns a list of Cisco Umbrella discovered that are high risk.
+    description: Returns a list of Cisco Umbrella discovered applications that are high risk.
     queries:
       - query: find cisco_umbrella_application with weightedRisk = "high" or weightedRisk = "veryHigh"
     tags:

@@ -9,8 +9,8 @@
 
 ## How it Works
 
-- JupiterOne periodically networks, domains, destinations, users, and discovered
-  applications from Cisco Umbrella to update the graph.
+- JupiterOne periodically ingests networks, domains, destinations, users, and
+  discovered applications from Cisco Umbrella to update the graph.
 - Write JupiterOne queries to review and monitor updates to the graph, or
   leverage existing queries.
 - Configure alerts to take action when JupiterOne graph changes, or leverage
@@ -39,8 +39,9 @@ If you need help with this integration, contact
 - Deployments - Read-Only
 - Policies/Destination Lists - Read-Only
 - Policies/Destinations - Read-Only
-- Reports/App Discovery - Read-Only NOTE: Future improvements may require
-  additional scopes be added.
+- Reports/App Discovery - Read-Only
+
+  NOTE: Future improvements may require additional scopes be added.
 
 3. Record the API Key and Key Secret values.
 
